@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pointwise — funnel lab</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="dot"></span>
+    <strong>Pointwise</strong>
+    <span class="subtle">funnel lab</span>
+  </div>
+  <div class="topbar-meta">
+    <label class="inline">
+      funnel
+      <input id="funnel-id" value="checkout" spellcheck="false" />
+    </label>
+    <span id="health" class="pill">connecting…</span>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="state-card">
+    <div class="card-head">
+      <h2>Report state</h2>
+      <span id="state-badge" class="badge">loading</span>
+    </div>
+    <p id="state-message" class="subtle">Reading the event log…</p>
+    <div class="grid-4" id="headline"></div>
+    <p class="provenance" id="provenance"></p>
+  </section>
+
+  <div class="columns">
+    <section class="card grow">
+      <div class="card-head">
+        <h2>Funnel steps</h2>
+        <div class="actions">
+          <button id="add-step" class="ghost" title="Append a step">+ step</button>
+          <button id="preview" class="secondary">Preview rules</button>
+          <button id="freeze" class="primary">Freeze version &amp; rebuild</button>
+        </div>
+      </div>
+      <div class="steps-head" aria-hidden="true">
+        <span>#</span><span>label</span><span>event</span>
+        <span>min wait</span><span>max wait</span><span>flags</span><span></span>
+      </div>
+      <div id="steps" class="steps" role="list"></div>
+      <div class="window-row">
+        <label>Conversion window
+          <input id="window-days" type="number" min="0" step="0.5" />
+          <span class="subtle">days</span>
+        </label>
+        <label class="inline"><input id="use-window" type="checkbox" /> apply limit</label>
+        <span class="subtle" id="rules-hash"></span>
+        <span class="hint">waits are in milliseconds; empty means no bound</span>
+      </div>
+      <div class="vis-wrap">
+        <canvas id="funnel-canvas" width="880" height="240"></canvas>
+      </div>
+      <div id="diff" class="diff"></div>
+    </section>
+
+    <section class="card side">
+      <div class="card-head"><h2>Ingest</h2><span class="pill" id="event-count">0 events</span></div>
+      <textarea id="ingest-text" spellcheck="false" placeholder='Paste a JSON array or one JSON object per line, e.g.
+{"event_id":"e-1","user_id":"ada","ts":1726000000000,"event":"view_product","session_id":"s-1"}'></textarea>
+      <div class="actions">
+        <button id="ingest-btn" class="secondary">Import events</button>
+        <label class="ghost file">choose file<input id="ingest-file" type="file" accept=".json,.jsonl,.ndjson" /></label>
+        <button id="seed-btn" class="ghost">Generate sample data</button>
+      </div>
+      <pre id="ingest-out" class="mono small"></pre>
+    </section>
+  </div>
+
+  <div class="columns">
+    <section class="card grow">
+      <div class="card-head">
+        <h2>Rebuild</h2>
+        <div class="actions">
+          <button id="stop-btn" class="ghost" disabled>Stop</button>
+          <button id="resume-btn" class="ghost" disabled>Resume</button>
+        </div>
+      </div>
+      <div class="progress"><div id="progress-fill"></div></div>
+      <div class="grid-4" id="rebuild-meta">
+        <div><span class="label">status</span><span class="value" id="rb-status">—</span></div>
+        <div><span class="label">passes</span><span class="value" id="rb-passes">—</span></div>
+        <div><span class="label">reused intervals</span><span class="value" id="rb-reused">—</span></div>
+        <div><span class="label">recomputed</span><span class="value" id="rb-recomputed">—</span></div>
+      </div>
+      <p class="provenance" id="affected">No rebuild yet.</p>
+    </section>
+
+    <section class="card side">
+      <div class="card-head"><h2>User path</h2></div>
+      <div class="actions">
+        <input id="user-id" placeholder="user id" spellcheck="false" />
+        <button id="path-btn" class="secondary">Show path</button>
+      </div>
+      <div id="user-summary" class="small"></div>
+      <ol id="user-path" class="path"></ol>
+    </section>
+  </div>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
